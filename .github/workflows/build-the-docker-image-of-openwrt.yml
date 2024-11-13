@@ -47,7 +47,7 @@ jobs:
         id: down
         if: (!cancelled())
         run: |
-          # Get OpenWrt file
+          # 获取OpenWrt文件
           openwrt_url="$(curl \
                             --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                             -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases?per_page=100" |
