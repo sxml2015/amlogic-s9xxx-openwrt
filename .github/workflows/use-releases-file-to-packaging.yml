@@ -1,9 +1,9 @@
 #=====================================================================================
 # https://github.com/ophub/amlogic-s9xxx-openwrt
-# Description: Use Releases file to packaging
+# 使用Releases文件进行打包
 #=====================================================================================
 
-name: Use Releases file to Packaging
+name: 使用 Releases 文件进行打包
 
 on:
   repository_dispatch:
