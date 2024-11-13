@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       source_branch:
-        description: "Select the source branch"
+        description: "选择源分支"
         required: false
         default: "openwrt-main"
         type: choice
@@ -19,7 +19,7 @@ on:
           - lede-master
           - immortalwrt-master
       openwrt_board:
-        description: "Select device board"
+        description: "选择设备"
         required: false
         default: "all"
         type: choice
@@ -171,7 +171,7 @@ on:
           - zk-r39a
           - zysj
       openwrt_kernel:
-        description: "Select kernel version"
+        description: "选择内核版本"
         required: false
         default: "6.1.y_6.6.y"
         type: choice
@@ -184,19 +184,19 @@ on:
           - 6.1.y_6.6.y
           - 5.15.y_5.10.y
       auto_kernel:
-        description: "Auto use the latest kernel"
+        description: "自动使用最新内核"
         required: false
         default: true
         type: boolean
       kernel_repo:
-        description: "Set the kernel repository"
+        description: "设置内核存储库"
         required: false
         default: "ophub/kernel"
         type: choice
         options:
           - ophub/kernel
       kernel_usage:
-        description: "Set the tags of the stable kernel."
+        description: "设置稳定内核的标签"
         required: false
         default: "stable"
         type: choice
@@ -206,7 +206,7 @@ on:
           - dev
           - beta
       openwrt_storage:
-        description: "Select image storage type."
+        description: "选择图像存储类型"
         required: false
         default: "save"
         type: choice
@@ -214,7 +214,7 @@ on:
           - save
           - temp
       builder_name:
-        description: "Set OpenWrt builder signature."
+        description: "设置 OpenWrt 构建器签名"
         required: false
         default: "ophub"
         type: choice
@@ -236,10 +236,10 @@ jobs:
     if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
 
     steps:
-      - name: Checkout
+      - name: 准备
         uses: actions/checkout@v4
 
-      - name: Initialization environment
+      - name: 初始化环境
         id: init
         env:
           DEBIAN_FRONTEND: noninteractive
@@ -261,7 +261,7 @@ jobs:
           sudo timedatectl set-timezone "${TZ}"
           echo "status=success" >> ${GITHUB_OUTPUT}
 
-      - name: Create simulated physical disk
+      - name: 创建模拟物理磁盘
         run: |
           mnt_size=$(expr $(df -h /mnt | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - 1)
           root_size=$(expr $(df -h / | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - 4)
@@ -279,7 +279,7 @@ jobs:
           sudo chown -R runner.runner /builder
           df -Th
 
-      - name: Clone source code [ ${{ inputs.source_branch }} ]
+      - name: 克隆源代码 [ ${{ inputs.source_branch }} ]
         id: codes
         working-directory: /builder
         if: ${{ steps.init.outputs.status }} == 'success' && !cancelled()
@@ -315,20 +315,20 @@ jobs:
           echo "TAGS_NAME=${TAGS_NAME}" >> ${GITHUB_OUTPUT}
           echo "status=success" >> ${GITHUB_OUTPUT}
 
-      - name: Load custom feeds
+      - name: 加载自定义订阅源
         run: |
           [[ -f "${FEEDS_CONF}" ]] && cp -f ${FEEDS_CONF} openwrt/feeds.conf.default
           chmod +x ${DIY_P1_SH}
           cd openwrt/
           ${GITHUB_WORKSPACE}/${DIY_P1_SH}
 
-      - name: Update feeds
+      - name: 更新软件包
         run: cd openwrt/ && ./scripts/feeds update -a
 
-      - name: Install feeds
+      - name: 安装软件包
         run: cd openwrt/ && ./scripts/feeds install -a
 
-      - name: Load custom configuration
+      - name: 加载自定义配置
         run: |
           [[ -d "files" ]] && mv -f files openwrt/files
           [[ -e "${CONFIG_FILE}" ]] && cp -f ${CONFIG_FILE} openwrt/.config
@@ -336,7 +336,7 @@ jobs:
           cd openwrt/
           ${GITHUB_WORKSPACE}/${DIY_P2_SH}
 
-      - name: Download package
+      - name: 下载软件包
         id: package
         run: |
           cd openwrt/
@@ -345,7 +345,7 @@ jobs:
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
 
-      - name: Compile the OpenWrt
+      - name: 编译OpenWrt
         id: compile
         run: |
           cd openwrt/
@@ -353,7 +353,7 @@ jobs:
           make -j$(($(nproc) + 1)) V=s || make -j1 || make -j1 V=s
           echo "status=success" >> ${GITHUB_OUTPUT}
 
-      - name: Clear server space
+      - name: 清除服务器空间
         id: clean
         if: ${{ steps.compile.outputs.status }} == 'success' && !cancelled()
         run: |
@@ -372,7 +372,7 @@ jobs:
           df -hT ${PWD}
           echo "status=success" >> ${GITHUB_OUTPUT}
 
-      - name: Upload OpenWrt to Release
+      - name: 上传 OpenWrt 到 Release
         uses: ncipollo/release-action@main
         if: ${{ steps.clean.outputs.status }} == 'success' && !cancelled()
         with:
@@ -383,7 +383,7 @@ jobs:
           replacesArtifacts: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Packaging OpenWrt
+      - name: 打包 OpenWrt
         if: ${{ steps.clean.outputs.status }} == 'success' && !cancelled()
         uses: ophub/amlogic-s9xxx-openwrt@main
         with:
@@ -395,7 +395,7 @@ jobs:
           kernel_usage: ${{ inputs.kernel_usage }}
           builder_name: ${{ inputs.builder_name }}
 
-      - name: Upload the packaged OpenWrt
+      - name: 上传打包好的OpenWrt
         uses: ncipollo/release-action@main
         if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
         with:
@@ -406,13 +406,13 @@ jobs:
           replacesArtifacts: true
           token: ${{ secrets.GITHUB_TOKEN }}
           body: |
-            ### OpenWrt Image information
+            ### OpenWrt
             - Default IP: 192.168.1.1
             - Default username: root
             - Default password: password
             - Default WIFI name: OpenWrt
             - Default WIFI password: none
-            ### Install to EMMC
+            ### 安装到EMMC
             - Login to OpenWrt → System → Amlogic Service → Install OpenWrt
             ### OpenWrt source code
             - [${{ steps.codes.outputs.TAGS_NAME }}](${{ steps.codes.outputs.REPO_URL }})
