@@ -20,8 +20,8 @@ on:
           - immortalwrt-master
       openwrt_board:
         description: "选择设备"
-        required: false
-        default: "all"
+        required: true
+        default: "s905x3-x96max_s905d"
         type: choice
         options:
           - all
@@ -187,7 +187,7 @@ on:
       auto_kernel:
         description: "自动使用最新内核"
         required: false
-        default: true
+        default: false
         type: boolean
       kernel_repo:
         description: "设置内核存储库"
