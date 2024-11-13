@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       source_branch:
-        description: "Select the source branch"
+        description: "选择源分支"
         required: false
         default: "official"
         type: choice
@@ -19,7 +19,7 @@ on:
           - lede
           - immortalwrt
       openwrt_board:
-        description: "Select device board"
+        description: "选择设备"
         required: false
         default: "all"
         type: choice
@@ -171,7 +171,7 @@ on:
           - zk-r39a
           - zysj
       openwrt_kernel:
-        description: "Select kernel version"
+        description: "选择内核版本"
         required: false
         default: "6.1.y_6.6.y"
         type: choice
@@ -184,19 +184,19 @@ on:
           - 6.1.y_6.6.y
           - 5.15.y_5.10.y
       auto_kernel:
-        description: "Auto use the latest kernel"
+        description: "自动使用最新内核"
         required: false
-        default: true
+        default: false
         type: boolean
       kernel_repo:
-        description: "Set the kernel repository"
+        description: "设置内核存储库"
         required: false
         default: "ophub/kernel"
         type: choice
         options:
           - ophub/kernel
       kernel_usage:
-        description: "Set the tags of the stable kernel."
+        description: "设置稳定内核的标签"
         required: false
         default: "stable"
         type: choice
@@ -206,7 +206,7 @@ on:
           - dev
           - beta
       openwrt_storage:
-        description: "Select image storage type."
+        description: "选择图片存储类型."
         required: false
         default: "save"
         type: choice
@@ -214,7 +214,7 @@ on:
           - save
           - temp
       builder_name:
-        description: "Set OpenWrt builder signature."
+        description: "设置 OpenWrt 生成器签名."
         required: false
         default: "ophub"
         type: choice
@@ -232,10 +232,10 @@ jobs:
     if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
 
     steps:
-      - name: Checkout
+      - name: 准备
         uses: actions/checkout@v4
 
-      - name: Initialization environment
+      - name: 初始化环境
         id: init
         env:
           DEBIAN_FRONTEND: noninteractive
@@ -257,7 +257,7 @@ jobs:
           sudo timedatectl set-timezone "${TZ}"
           echo "status=success" >> ${GITHUB_OUTPUT}
 
-      - name: Create simulated physical disk
+      - name: 创建模拟物理磁盘
         run: |
           mnt_size=$(expr $(df -h /mnt | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - 1)
           root_size=$(expr $(df -h / | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - 4)
@@ -275,7 +275,7 @@ jobs:
           sudo chown -R runner.runner /builder
           df -Th
 
-      - name: Download OpenWrt [ ${{ inputs.source_branch }} ]
+      - name: 克隆源代码 [ ${{ inputs.source_branch }} ]
         id: down
         working-directory: /builder
         if: ${{ steps.init.outputs.status }} == 'success' && !cancelled()
@@ -329,7 +329,7 @@ jobs:
           echo "TAGS_NAME=${TAGS_NAME}" >> ${GITHUB_OUTPUT}
           echo "status=success" >> ${GITHUB_OUTPUT}
 
-      - name: Packaging OpenWrt
+      - name: 打包 OpenWrt
         if: ${{ steps.down.outputs.status }} == 'success' && !cancelled()
         uses: ophub/amlogic-s9xxx-openwrt@main
         with:
@@ -341,7 +341,7 @@ jobs:
           kernel_usage: ${{ inputs.kernel_usage }}
           builder_name: ${{ inputs.builder_name }}
 
-      - name: Upload the packaged OpenWrt
+      - name: 上传打包好的OpenWrt
         uses: ncipollo/release-action@main
         if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
         with:
