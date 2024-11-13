@@ -12,7 +12,7 @@ on:
       source_branch:
         description: "选择源分支"
         required: false
-        default: "openwrt-main"
+        default: "immortalwrt-master"
         type: choice
         options:
           - openwrt-main
@@ -21,7 +21,7 @@ on:
       openwrt_board:
         description: "选择设备"
         required: false
-        default: "all"
+        default: "s905x3_s905d"
         type: choice
         options:
           - all
@@ -198,7 +198,7 @@ on:
       kernel_usage:
         description: "设置稳定内核的标签"
         required: false
-        default: "stable"
+        default: "flippy"
         type: choice
         options:
           - stable
@@ -295,7 +295,7 @@ jobs:
               TAGS_NAME="lede"
           elif [[ "${{ inputs.source_branch }}" == *"immortalwrt"* ]]; then
               REPO_URL="https://github.com/immortalwrt/immortalwrt"
-              REPO_BRANCH="master"
+              REPO_BRANCH="openwrt-23.05"
               TAGS_NAME="immortalwrt"
           else
               echo "Unknown source code repository."
