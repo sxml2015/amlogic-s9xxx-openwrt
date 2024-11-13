@@ -1,6 +1,7 @@
 #=====================================================================================
 # https://github.com/ophub/amlogic-s9xxx-openwrt
 # Description: Build the Docker image of OpenWrt
+# 构建OpenWrt的Docker镜像
 # Instructions: https://github.com/docker/build-push-action
 # Build and Push to: https://hub.docker.com/
 #=====================================================================================
