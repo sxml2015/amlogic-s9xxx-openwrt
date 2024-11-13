@@ -184,6 +184,7 @@ on:
           - 6.6.y
           - 6.1.y_6.6.y
           - 5.15.y_5.10.y
+          - 6.6.52
       auto_kernel:
         description: "自动使用最新内核"
         required: false
