@@ -280,7 +280,7 @@ jobs:
         working-directory: /builder
         if: ${{ steps.init.outputs.status }} == 'success' && !cancelled()
         run: |
-          # Set up compilation source code
+          # 设置编译源代码
           if [[ "${{ inputs.source_branch }}" == *"official"* ]]; then
               REPO_URL="https://github.com/openwrt/openwrt"
               REPO_BRANCH="main"
