@@ -7,7 +7,7 @@
 #                https://downloads.immortalwrt.org/releases
 #=====================================================================================
 
-name: Build OpenWrt with ImageBuilder
+name: 使用 ImageBuilder 构建 OpenWrt
 
 on:
   repository_dispatch:
