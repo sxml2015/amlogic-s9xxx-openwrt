@@ -174,7 +174,7 @@ on:
       openwrt_kernel:
         description: "选择内核版本"
         required: false
-        default: "6.1.y_6.6.y"
+        default: "6.6.52"
         type: choice
         options:
           - 5.4.y
