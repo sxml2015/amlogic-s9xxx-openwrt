@@ -3,7 +3,7 @@
 # Description: Build OpenWrt
 #============================================================================================
 
-name: Build OpenWrt
+name: 编译 OpenWrt
 
 on:
   repository_dispatch:
