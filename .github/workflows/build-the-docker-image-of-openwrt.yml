@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       source_branch:
-        description: "Select the source branch"
+        description: "选择源分支"
         required: false
         default: "official"
         type: choice
@@ -22,7 +22,7 @@ on:
           - lede
           - immortalwrt
       docker_img:
-        description: "Set the docker image"
+        description: "设置 docker 镜像"
         required: false
         default: "ophub/openwrt-aarch64:latest"
         type: choice
@@ -40,10 +40,10 @@ jobs:
     if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
 
     steps:
-      - name: Checkout
+      - name: 准备
         uses: actions/checkout@v4
 
-      - name: Download OpenWrt rootfs file [ ${{ inputs.source_branch }} ]
+      - name: 下载 OpenWrt rootfs 文件 [ ${{ inputs.source_branch }} ]
         id: down
         if: (!cancelled())
         run: |
@@ -61,7 +61,7 @@ jobs:
           [[ "${?}" -ne "0" ]] && echo "OpenWrt file download failed." && exit 1
           echo "status=success" >> ${GITHUB_OUTPUT}
 
-      - name: Build the Docker image
+      - name: 构建 Docker 映像
         id: make
         if: ${{ steps.down.outputs.status }} == 'success' && !cancelled()
         run: |
@@ -69,17 +69,17 @@ jobs:
           ${MAKE_DOCKER_SH}
           echo "status=success" >> ${GITHUB_OUTPUT}
 
-      - name: Set up QEMU
+      - name: 设置 QEMU
         id: qemu
         if: ${{ steps.make.outputs.status }} == 'success' && !cancelled()
         uses: docker/setup-qemu-action@v3
 
-      - name: Set up Docker Buildx
+      - name: 设置 Docker Buildx
         id: buildx
         if: (!cancelled())
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to Docker Hub
+      - name: 登录Docker Hub
         id: login
         if: (!cancelled())
         uses: docker/login-action@v3
@@ -87,7 +87,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Push to Docker Hub
+      - name: 推送至 Docker Hub
         id: push
         if: (!cancelled())
         uses: docker/build-push-action@v5
