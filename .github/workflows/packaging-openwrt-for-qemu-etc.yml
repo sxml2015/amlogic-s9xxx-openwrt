@@ -1,5 +1,6 @@
 #=====================================================================================
 # Description: Packaging OpenWrt for qemu, allwinner, rockchip and amlogic
+# 描述：为 qemu、allwinner、rockchip 和 amlogic 打包 OpenWrt
 # Copyright (C) 2021 https://github.com/unifreq/openwrt_packit
 # Copyright (C) 2021 https://github.com/ophub/flippy-openwrt-actions
 #=====================================================================================
