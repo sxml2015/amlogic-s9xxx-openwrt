@@ -11,13 +11,13 @@ on:
     inputs:
       delete_releases:
         description: "删除 Releases 文件?"
-        required: true
-        default: true
+        required: false
+        default: false
         type: boolean
       delete_tags:
         description: "删除相关标签?"
         required: false
-        default: true
+        default: false
         type: boolean
       prerelease_option:
         description: "是否区分预发布."
