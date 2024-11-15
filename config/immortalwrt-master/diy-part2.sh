@@ -13,9 +13,10 @@ rm -rf feeds/luci/applications/luci-app-dockerman
 #rm -rf package/lean/luci-app-wrtbwmon
 rm -rf feeds/packages/net/smartdns
 rm -rf feeds/luci/applications/luci-app-smartdns
-rm -fr feeds/luci/themes/luci-theme-design
-rm -rf feeds/luci/applications/luci-app-ddns-go
-rm -rf feeds/packages/net/ddns-go
+rm -fr feeds/luci/themes/luci-theme-argon
+#rm -fr feeds/luci/themes/luci-theme-design
+#rm -rf feeds/luci/applications/luci-app-ddns-go
+#rm -rf feeds/packages/net/ddns-go
 
 # Add the default password for the 'root' user（Change the empty password to 'password'）
 sed -i 's/root:::0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.::0:99999:7:::/g' package/base-files/files/etc/shadow
