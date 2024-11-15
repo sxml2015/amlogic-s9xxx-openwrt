@@ -28,6 +28,9 @@ echo "DISTRIB_SOURCECODE='immortalwrt'" >>package/base-files/files/etc/openwrt_r
 # Modify default IP（FROM 192.168.1.1 CHANGE TO 192.168.31.4）
 # sed -i 's/192.168.1.1/192.168.31.4/g' package/base-files/files/bin/config_generate
 
+#修改默认主题
+#sed -i "s/luci-theme-bootstrap/luci-theme-argon/g" $(find ./feeds/luci/collections/ -type f -name "Makefile")
+
 # 设置ttyd免帐号登录
 sed -i 's/\/bin\/login/\/bin\/login -f root/' feeds/packages/utils/ttyd/files/ttyd.config
 
@@ -137,6 +140,9 @@ git clone -b v5-lua https://github.com/sbwml/luci-app-mosdns package/mosdns
 
 # 应用补丁
 # git apply ../config/patches/{0001*,0002*}.patch --directory=feeds/luci
+
+#readd cpufreq for aarch64
+sed -i 's/LUCI_DEPENDS.*/LUCI_DEPENDS:=\@\(aarch64\|\|arm\)/g' feeds/luci/applications/luci-app-cpufreq/Makefile
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
