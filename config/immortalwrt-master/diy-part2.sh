@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#   immortalwrt 2024-11-17 23.05
+#   immortalwrt 2024-11-19 23.05
 #========================================================================================================================
 # https://github.com/ophub/amlogic-s9xxx-openwrt
 # Description: Automatically Build OpenWrt
@@ -9,7 +9,8 @@
 #========================================================================================================================
 
 #移除不用软件包
-rm -rf feeds/luci/applications/luci-app-dockerman
+#Docker容器
+#rm -rf feeds/luci/applications/luci-app-dockerman
 #rm -rf package/lean/luci-app-wrtbwmon
 rm -rf feeds/packages/net/smartdns
 rm -rf feeds/luci/applications/luci-app-smartdns
@@ -120,7 +121,11 @@ sed -i "s|http.*/library|https://github.com/breakings/OpenWrt/tree/main/opt/kern
 #git clone --depth=1 https://github.com/sxml/luci-app-design-config.git package/luci-app-design-config
 
 # mihomo
-#git clone --depth=1 https://github.com/morytyann/OpenWrt-mihomo package/luci-app-mihomo
+##git clone --depth=1 https://github.com/morytyann/OpenWrt-mihomo package/luci-app-mihomo
+# mihomo
+git clone --depth=1 https://github.com/morytyann/OpenWrt-mihomo.git
+cp -rf OpenWrt-mihomo/luci-app-mihomo package/luci-app-mihomo
+cp -rf OpenWrt-mihomo/mihomo package/mihomo
 
 # 应用补丁
 # git apply ../config/patches/{0001*,0002*}.patch --directory=feeds/luci
