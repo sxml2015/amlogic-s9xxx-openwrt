@@ -1,7 +1,7 @@
 #!/bin/bash
 #============================================================
 # sxml
-# 2024-12-02 1806
+# 2024-12-06 1806
 #https://github.com/HoldOnBro/Actions-OpenWrt
 #https://github.com/breakings/OpenWrt
 #============================================================
@@ -13,6 +13,25 @@ rm -rf feeds/luci/applications/luci-app-smartdns
 rm -fr feeds/luci/themes/luci-theme-design
 rm -rf feeds/luci/applications/luci-app-ddns-go
 rm -rf feeds/packages/net/ddns-go
+
+echo "==== 修复 libcryptopp 编译问题 ===="
+# 安装构建依赖
+sudo apt-get update
+sudo apt-get install -y automake autoconf libtool
+# 设置编译器环境
+export PATH=/workdir/openwrt/staging_dir/toolchain-aarch64_generic_gcc-11.3.0_musl/bin:$PATH
+export CC="aarch64-openwrt-linux-musl-gcc"
+export CXX="aarch64-openwrt-linux-musl-g++"
+export CCACHE_DISABLE=1
+# 确保 Makefile 和环境中没有错误的 ccache 包装编译器
+find package/lean/libcryptopp -type f \( -name "Makefile*" -o -name "*.am" -o -name "*.in" \) \
+  | xargs sed -i 's/ccache aarch64-openwrt-linux-musl-g++/aarch64-openwrt-linux-musl-g++/g'
+# 清理 libcryptopp 的构建缓存
+make package/lean/libcryptopp/clean
+# 应用补丁并重新生成构建文件
+pushd package/lean/libcryptopp
+autoreconf -fi
+popd
 
 #重新编译时没有旧的或不必要的文件干扰
 #staging_dir：编译生成的文件和依赖库
